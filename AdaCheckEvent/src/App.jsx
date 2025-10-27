@@ -1,34 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  useEffect(() => {
+    const controller = new AbortController()
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=1&offset=2', {
+          signal: controller.signal
+        })
+        const dataFetch = await response.json()
+        setData(dataFetch.results)
+        console.log(dataFetch.results)
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          console.log('Fetch aborted')
+        } else {
+          setError(err.message)
+        }
+      }
+    }
+
+    fetchData()
+
+    return () => controller.abort()
+  }, [])
+
+  if (error) {
+    return <div>Erreur: {error}</div>
+  }
+  return data ? (
+    <div className="App">
+      <h1>Événements à Paris</h1>
+      <p> {data.map((elem) => {
+        return (<span key={elem.id}>{elem.title} <img src={elem.cover_url} alt={elem.title} />{elem.description}</span>)
+      })} </p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button className="bg-blue-500" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+  )
+  : (<div>Chargement des données...</div>
   )
 }
 
