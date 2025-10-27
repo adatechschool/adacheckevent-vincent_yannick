@@ -1,34 +1,32 @@
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
   const [offset, setOffset] = useState(0)
-  useEffect(() => {
-    const controller = new AbortController()
 
-    const fetchData = async (offset) => {
-      try {
-        const response = await fetch(`https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=2&offset=${offset}`, {
-          signal: controller.signal
-        })
-        const dataFetch = await response.json()
-        setData(dataFetch.results)
-        console.log(dataFetch.results)
-      } catch (err) {
-        if (err.name === 'AbortError') {
-          console.log('Fetch aborted')
-        } else {
-          setError(err.message)
-        }
+  const fetchData = async (newOffset) => {
+    const controller = new AbortController()
+    try {
+      const response = await fetch(`https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=20&offset=${newOffset}`, {
+        signal: controller.signal
+      })
+      const dataFetch = await response.json()
+      setData(dataFetch.results)
+      console.log('Données récupérées avec offset:', newOffset, dataFetch.results)
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        console.log('Fetch aborted')
+      } else {
+        setError(err.message)
       }
     }
+  }
 
+  useEffect(() => {
     fetchData(offset)
-
-    return () => controller.abort()
-  }, [])
+  }, [offset])
 
   if (error) {
     return <div>Erreur: {error}</div>
@@ -36,13 +34,22 @@ function App() {
   return data ? (
     <div className="App">
       <h1>Événements à Paris</h1>
+      <div>
+        <p>Offset actuel: {offset}</p>
+        <button onClick={() => setOffset(offset + 20)} className='bg-blue-500 rounded'>
+          Suivant (offset +20)
+        </button>
+        <button onClick={() => setOffset(Math.max(0, offset - 20))} className='bg-red-500 rounded'>
+          Précédent (offset -20)
+        </button>
+      </div>
       <p> {data.map((elem) => {
         return (
-          <>
-        <span key={elem.id}>{elem.title} <img src={elem.cover_url} alt={elem.title} />{elem.description}</span>
-        <button onClick={() => fetchData(2)} className='bg-blue-500 rounded'>test</button>
-          </>
-
+          <div key={elem.id}>
+            <span>{elem.title}</span>
+            <img src={elem.cover_url} alt={elem.title} />
+            <p>{elem.description}</p>
+          </div>
         )
       })} </p>
       </div>
