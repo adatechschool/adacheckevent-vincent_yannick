@@ -51,18 +51,11 @@ function App() {
           Précédent (offset -20)
         </button>
       </div>
-      <div> {data.map((elem) => {
-        return (
-          <div>
-            <Card element={elem} />
-          <div key={elem.id}>
-            <span>{elem.title}</span>
-            <img src={elem.cover_url} alt={elem.title} />
-            <p>{elem.description}</p>
-          </div>
-          </div>
-        )
-      })} </div>
+      <div className="grid gap-4"> 
+        {data.map((elem) => (
+          <Card key={elem.id} element={elem} />
+        ))} 
+      </div>
       <BtnScrollToTop />
       </div>
   )
