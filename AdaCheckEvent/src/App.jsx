@@ -32,6 +32,26 @@ function App() {
     }
   }
 
+    useEffect(() => {
+    const handleScroll = () => {
+      // Calcul de la position de scroll
+      const scrollTop = document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight
+      const clientHeight = document.documentElement.clientHeight
+      
+      // Si on est proche du bas (100px avant la fin)
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        setOffset(prevOffset => prevOffset + 20)
+      }
+    }
+
+    // Ajouter l'écouteur d'événement
+    window.addEventListener('scroll', handleScroll)
+    
+    // Nettoyer l'écouteur au démontage
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   useEffect(() => {
     fetchData(offset)
   }, [offset])
