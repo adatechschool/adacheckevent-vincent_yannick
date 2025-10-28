@@ -3,7 +3,7 @@ import './App.css'
 import { BtnScrollToTop } from './component/BtnScrollToTop'
 
 function App() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState([])
   const [error, setError] = useState(null)
   const [offset, setOffset] = useState(0)
 
@@ -14,7 +14,13 @@ function App() {
         signal: controller.signal
       })
       const dataFetch = await response.json()
-      setData(dataFetch.results)
+      
+      // Remplacer les données au lieu de les accumuler pour éviter les doublons
+      setData((prev) => {
+        const newIds = new Set(prev.map(item => item.id))
+        const filteredResults = dataFetch.results.filter(item => !newIds.has(item.id))
+        return [...prev, ...filteredResults]
+      })
       console.log('Données récupérées avec offset:', newOffset, dataFetch.results)
     } catch (err) {
       if (err.name === 'AbortError') {
@@ -44,7 +50,7 @@ function App() {
           Précédent (offset -20)
         </button>
       </div>
-      <p> {data.map((elem) => {
+      <div> {data.map((elem) => {
         return (
           <div key={elem.id}>
             <span>{elem.title}</span>
@@ -52,7 +58,7 @@ function App() {
             <p>{elem.description}</p>
           </div>
         )
-      })} </p>
+      })} </div>
       <BtnScrollToTop />
       </div>
   )
