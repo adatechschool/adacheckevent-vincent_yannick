@@ -7,14 +7,20 @@ function App() {
   const [data, setData] = useState([])
   const [error, setError] = useState(null)
   const [offset, setOffset] = useState(0)
-
-  const fetchData = async (newOffset) => {
+  const [searchTerm, setSearchTerm] = useState("")
+  const limit = 20
+  const fetchData = async (newOffset, newSearchTerm) => {
     const controller = new AbortController()
     try {
-      const response = await fetch(`https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=20&offset=${newOffset}`, {
+      let url = `https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=${limit}&offset=${newOffset}`
+      if (newSearchTerm) {
+        url += `&where=search(title, "${encodeURIComponent(newSearchTerm)}")`
+      }
+      let response = await fetch(url, {
         signal: controller.signal
       })
       const dataFetch = await response.json()
+      console.log(response.url)
       
       // Remplacer les données au lieu de les accumuler pour éviter les doublons
       setData((prev) => {
@@ -32,6 +38,13 @@ function App() {
     }
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setOffset(0)
+    setData([])
+    fetchData(0, searchTerm)
+  }
+
     useEffect(() => {
     const handleScroll = () => {
       // Calcul de la position de scroll
@@ -41,7 +54,7 @@ function App() {
       
       // Si on est proche du bas (100px avant la fin)
       if (scrollTop + clientHeight >= scrollHeight - 100) {
-        setOffset(prevOffset => prevOffset + 20)
+        setOffset(prevOffset => prevOffset + limit)
       }
     }
 
@@ -53,7 +66,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetchData(offset)
+    fetchData(offset, searchTerm)
   }, [offset])
 
   if (error) {
@@ -63,13 +76,24 @@ function App() {
     <div className="App">
       <h1>Événements à Paris</h1>
       <div>
-        <p>Offset actuel: {offset}</p>
-        <button onClick={() => setOffset(offset + 20)} className='bg-blue-500 rounded'>
-          Suivant (offset +20)
-        </button>
-        <button onClick={() => setOffset(Math.max(0, offset - 20))} className='bg-red-500 rounded'>
-          Précédent (offset -20)
-        </button>
+ {/* Barre de recherche */}
+      <div className="search-container mb-6 p-4 bg-gray-100 rounded-lg">
+        <form onSubmit={handleSearch} className="flex gap-2 mb-2">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Rechercher un événement (ex: concert, théâtre, exposition...)"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition-colors"
+          >
+          </button>
+
+        </form>
+        </div>
       </div>
       <div className="grid gap-4"> 
         {data.map((elem) => (
