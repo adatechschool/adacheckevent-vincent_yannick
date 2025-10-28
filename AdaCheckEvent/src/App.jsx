@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { BtnScrollToTop } from './component/BtnScrollToTop'
+import { Card } from './component/Card'
 
 function App() {
   const [data, setData] = useState([])
@@ -52,17 +53,21 @@ function App() {
       </div>
       <div> {data.map((elem) => {
         return (
+          <div>
+            <Card element={elem} />
           <div key={elem.id}>
             <span>{elem.title}</span>
             <img src={elem.cover_url} alt={elem.title} />
             <p>{elem.description}</p>
+          </div>
           </div>
         )
       })} </div>
       <BtnScrollToTop />
       </div>
   )
-  : (<div>Chargement des données...</div>
+  : (
+  <div>Chargement des données...</div>
   )
 }
 
