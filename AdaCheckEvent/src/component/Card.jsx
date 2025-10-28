@@ -33,6 +33,6 @@ export const Card = ({ element }) => {
           {isExpanded ? "Voir moins" : "Voir plus"}
         </button>
       )}
-    </div>
+    </div> 
   );
 };
