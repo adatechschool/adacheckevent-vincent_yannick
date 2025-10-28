@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { BtnScrollToTop } from './component/BtnScrollToTop'
 
 function App() {
   const [data, setData] = useState(null)
@@ -52,6 +53,7 @@ function App() {
           </div>
         )
       })} </p>
+      <BtnScrollToTop />
       </div>
   )
   : (<div>Chargement des données...</div>
