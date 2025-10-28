@@ -22,19 +22,34 @@ function App() {
       const dataFetch = await response.json()
       console.log(response.url)
       
-      // Remplacer les données au lieu de les accumuler pour éviter les doublons
-      setData((prev) => {
-        const newIds = new Set(prev.map(item => item.id))
-        const filteredResults = dataFetch.results.filter(item => !newIds.has(item.id))
-        return [...prev, ...filteredResults]
-      })
-      console.log('Données récupérées avec offset:', newOffset, dataFetch.results)
+      // Si pas de nouveaux résultats, on arrête
+      if (!dataFetch.results || dataFetch.results.length === 0) {
+        setHasMore(false)
+        setLoading(false)
+        return
+      }
+
+      if (newOffset === 0) {
+        // Nouvelle recherche : remplacer les données
+        setData(dataFetch.results)
+      } else {
+        // Scroll infini : ajouter les données
+        setData((prev) => {
+          const newIds = new Set(prev.map(item => item.id))
+          const filteredResults = dataFetch.results.filter(item => !newIds.has(item.id))
+          return [...prev, ...filteredResults]
+        })
+      }
+      
+      console.log('Données récupérées avec offset:', newOffset, 'recherche:', search, dataFetch.results)
     } catch (err) {
       if (err.name === 'AbortError') {
         console.log('Fetch aborted')
       } else {
         setError(err.message)
       }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -47,6 +62,9 @@ function App() {
 
     useEffect(() => {
     const handleScroll = () => {
+      // Désactiver le scroll infini pendant le chargement ou si plus de données
+      if (loading || !hasMore) return
+      
       // Calcul de la position de scroll
       const scrollTop = document.documentElement.scrollTop
       const scrollHeight = document.documentElement.scrollHeight
@@ -63,8 +81,9 @@ function App() {
     
     // Nettoyer l'écouteur au démontage
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [loading, hasMore, searchTerm])
 
+  // Chargement initial
   useEffect(() => {
     fetchData(offset, searchTerm)
   }, [offset])
