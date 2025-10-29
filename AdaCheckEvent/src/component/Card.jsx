@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 export const Card = ({ element }) => {
-  let description = element.description.replace(/<[^>]+>/g, "");
+  let description = element.description || "";
+  description = description.replace(/<[^>]+>/g, "") 
   description = description.replace(/&amp;/g, "&");
   const descriptionTruncated = description.substring(0, 160) + "...";
   const [isExpanded, setIsExpanded] = useState(false);
