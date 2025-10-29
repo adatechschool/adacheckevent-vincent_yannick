@@ -66,7 +66,7 @@ export const useEventData = (initialSearchTerm = "") => {
       fetchData(newOffset, searchTerm)
       // console.log("searchTerm dans loadMore:", searchTerm)
     }
-  }, [isFetching, offset, limit, fetchData, searchTerm])
+  }, [isFetching, offset, limit, fetchData])
 
   // Fonction de gestion du scroll infini
   const handleScroll = useCallback(() => {
