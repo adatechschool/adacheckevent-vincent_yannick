@@ -10,6 +10,7 @@ function App() {
   const [offset, setOffset] = useState(0)
   const [searchTerm, setSearchTerm] = useState("")
   const [isFetching, setIsFetching] = useState(false)
+  const [sortOrder, setSortOrder] = useState("") // "" = pas de tri, "asc" = ascendant, "desc" = descendant
   const limit = 20
   const fetchData = async (newOffset, newSearchTerm) => {
     const controller = new AbortController()
