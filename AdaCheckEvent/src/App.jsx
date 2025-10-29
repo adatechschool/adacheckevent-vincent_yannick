@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { BtnScrollToTop } from './component/BtnScrollToTop'
 import { Card } from './component/Card'
+import { Search } from 'lucide-react'
 
 function App() {
   const [data, setData] = useState([])
@@ -95,6 +96,7 @@ function App() {
             type="submit"
             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition-colors"
           >
+            <Search />
           </button>
 
         </form>
