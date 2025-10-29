@@ -8,9 +8,12 @@ function App() {
   const [error, setError] = useState(null)
   const [offset, setOffset] = useState(0)
   const [searchTerm, setSearchTerm] = useState("")
+  const [isFetching, setIsFetching] = useState(false)
   const limit = 20
   const fetchData = async (newOffset, newSearchTerm) => {
     const controller = new AbortController()
+    if (isFetching) return
+    setIsFetching(true)
     try {
       let url = `https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=${limit}&offset=${newOffset}`
       if (newSearchTerm) {
@@ -35,6 +38,8 @@ function App() {
       } else {
         setError(err.message)
       }
+    } finally {
+      setIsFetching(false)
     }
   }
 
@@ -53,7 +58,7 @@ function App() {
       const clientHeight = document.documentElement.clientHeight
       
       // Si on est proche du bas (100px avant la fin)
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
+      if (scrollTop + clientHeight >= scrollHeight - 100 && !isFetching) {
         setOffset(prevOffset => prevOffset + limit)
       }
     }
@@ -63,7 +68,7 @@ function App() {
     
     // Nettoyer l'écouteur au démontage
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isFetching])
 
   useEffect(() => {
     fetchData(offset, searchTerm)
