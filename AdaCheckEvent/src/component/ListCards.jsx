@@ -1,12 +1,18 @@
-import { useState } from 'react'
-import { Card } from './Card'
-import { Search } from 'lucide-react'
+import { useState } from "react";
+import { Card } from "./Card";
+import { Search } from "lucide-react";
 
-export function ListCards({ data, onSearch, searchTerm, setSearchTerm, isFetching }) {
+export function ListCards({
+  data,
+  onSearch,
+  searchTerm,
+  setSearchTerm,
+  isFetching,
+}) {
   const handleSearch = (e) => {
-    e.preventDefault()
-    onSearch(searchTerm)
-  }
+    e.preventDefault();
+    onSearch(searchTerm);
+  };
 
   return (
     <div>
@@ -31,12 +37,12 @@ export function ListCards({ data, onSearch, searchTerm, setSearchTerm, isFetchin
       </div>
 
       {/* Liste des cartes */}
-      <div className="grid gap-4"> 
+      <div className="grid gap-4">
         {data.map((elem) => (
           <Card key={elem.id} element={elem} />
-        ))} 
+        ))}
       </div>
-      
+
       {/* Indicateur de chargement */}
       {isFetching && (
         <div className="text-center mt-4 p-4">
@@ -45,5 +51,5 @@ export function ListCards({ data, onSearch, searchTerm, setSearchTerm, isFetchin
         </div>
       )}
     </div>
-  )
+  );
 }

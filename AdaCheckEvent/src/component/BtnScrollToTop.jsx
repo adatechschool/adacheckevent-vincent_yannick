@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowUpFromLine } from "lucide-react"
+import { ArrowUpFromLine } from "lucide-react";
 export const BtnScrollToTop = () => {
   const [visible, setVisible] = useState(false);
 
@@ -25,5 +25,4 @@ export const BtnScrollToTop = () => {
       </button>
     )
   );
-}
-
+};
