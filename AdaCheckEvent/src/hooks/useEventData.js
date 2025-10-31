@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 
-export const useEventData = (initialSearchTerm = "") => {
+export const useEventData = (
+  initialSearchTerm = "",
+  enableInfiniteScroll = true
+) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [offset, setOffset] = useState(0);
@@ -76,7 +79,6 @@ export const useEventData = (initialSearchTerm = "") => {
       const newOffset = offset + limit;
       setOffset(newOffset);
       fetchData(newOffset, searchTerm);
-      // console.log("searchTerm dans loadMore:", searchTerm)
     }
   }, [isFetching, offset, limit, fetchData]);
 
@@ -107,9 +109,11 @@ export const useEventData = (initialSearchTerm = "") => {
 
   // Gestion du scroll infini
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+    if (enableInfiniteScroll) {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll, enableInfiniteScroll]);
 
   return {
     data,

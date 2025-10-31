@@ -9,7 +9,7 @@ export function ListCards({
   setSearchTerm,
   isFetching,
   toggleFavorite,
-  isFavorite
+  isFavorite,
 }) {
   const handleSearch = (e) => {
     e.preventDefault();
@@ -20,13 +20,16 @@ export function ListCards({
     <div>
       {/* Barre de recherche */}
       <div className="search-container mb-6 p-4 rounded-lg dark:text-white">
-        <form onSubmit={handleSearch} className="flex gap-2 mb-2">
+        <form
+          onSubmit={handleSearch}
+          className="flex flex-col sm:flex-row gap-2 mb-2"
+        >
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Rechercher un événement (ex: concert, théâtre, exposition...)"
-            className="flex-1 px-4 py-2 border border-teal-600 dark:border-gray-600 dark:bg-gray-900 dark:placeholder-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 dark:focus:ring-green-600"
+            className="w-full sm:flex-1 px-4 py-2 border border-teal-600 dark:border-gray-600 dark:bg-gray-900 dark:placeholder-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 dark:focus:ring-green-600"
           />
           <button
             type="submit"
@@ -39,9 +42,14 @@ export function ListCards({
       </div>
 
       {/* Liste des cartes */}
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 gap-4 px-4">
         {data.map((elem) => (
-          <Card key={elem.id} element={elem} isFavorite={isFavorite(elem.id)} onToggleFavorite={() => toggleFavorite(elem.id)} />
+          <Card
+            key={elem.id}
+            element={elem}
+            isFavorite={isFavorite(elem.id)}
+            onToggleFavorite={() => toggleFavorite(elem.id)}
+          />
         ))}
       </div>
 

@@ -19,7 +19,7 @@ export const BtnScrollToTop = () => {
     visible && (
       <button
         onClick={scrollToTop}
-        className="fixed bottom-5 right-5 bg-blue-500 text-white p-3 rounded-full shadow-md hover:bg-blue-600 transition"
+        className="fixed bottom-5 right-5 bg-green-600 hover:bg-green-700 shadow-[0_0_15px_rgba(0,255,100,0.3)] text-white dark:text-gray-900  p-3 rounded-full transition"
       >
         <ArrowUpFromLine />
       </button>

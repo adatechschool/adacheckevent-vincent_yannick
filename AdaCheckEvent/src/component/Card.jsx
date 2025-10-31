@@ -12,21 +12,31 @@ export const Card = ({ element, isFavorite, onToggleFavorite }) => {
   };
 
   return (
-    <div key={element.id} className="border p-4 rounded-lg shadow-md mb-4">
-      <div className="flex justify-between items-start mb-2">
-       <h3 className="text-xl font-bold mb-2 text-white">{element.title}</h3>
-       <button onClick={onToggleFavorite} className={`text-2xl transition-colors hover:scale-110 ${
-          isFavorite ? 'text-red-500' : 'text-gray-400 hover:text-red-300'
-       }`}
-       aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
-          {isFavorite ? '❤️' : '🤍'}
+    <div
+      key={element.id}
+      className="border p-4 rounded-lg shadow-md mb-4 bg-gray-800/50"
+    >
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-2">
+        <h3 className="text-lg sm:text-xl font-bold mb-2 text-white">
+          {element.title}
+        </h3>
+        <button
+          onClick={onToggleFavorite}
+          className={`text-2xl transition-colors hover:scale-110 mt-2 sm:mt-0 ${
+            isFavorite ? "text-red-500" : "text-gray-400 hover:text-red-300"
+          }`}
+          aria-label={
+            isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+          }
+        >
+          {isFavorite ? "❤️" : "🤍"}
         </button>
       </div>
       {element.cover_url && (
         <img
           src={element.cover_url}
           alt={element.title}
-          className="w-full h-48 object-cover rounded mb-3"
+          className="w-full h-48 md:h-56 lg:h-64 object-cover rounded mb-3"
         />
       )}
 
