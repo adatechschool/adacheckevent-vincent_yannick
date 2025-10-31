@@ -8,6 +8,8 @@ export function ListCards({
   searchTerm,
   setSearchTerm,
   isFetching,
+  toggleFavorite,
+  isFavorite
 }) {
   const handleSearch = (e) => {
     e.preventDefault();
@@ -39,7 +41,7 @@ export function ListCards({
       {/* Liste des cartes */}
       <div className="grid gap-4">
         {data.map((elem) => (
-          <Card key={elem.id} element={elem} />
+          <Card key={elem.id} element={elem} isFavorite={isFavorite(elem.id)} onToggleFavorite={() => toggleFavorite(elem.id)} />
         ))}
       </div>
 

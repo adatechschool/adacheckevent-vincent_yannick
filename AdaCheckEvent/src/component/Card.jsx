@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const Card = ({ element }) => {
+export const Card = ({ element, isFavorite, onToggleFavorite }) => {
   let description = element.description || "";
   description = description.replace(/<[^>]+>/g, "");
   description = description.replace(/&amp;/g, "&");
@@ -13,7 +13,15 @@ export const Card = ({ element }) => {
 
   return (
     <div key={element.id} className="border p-4 rounded-lg shadow-md mb-4">
-      <h3 className="text-xl font-bold mb-2">{element.title}</h3>
+      <div className="flex justify-between items-start mb-2">
+       <h3 className="text-xl font-bold mb-2">{element.title}</h3>
+       <button onClick={onToggleFavorite} className={`text-2xl transition-colors hover:scale-110 ${
+          isFavorite ? 'text-red-500' : 'text-gray-400 hover:text-red-300'
+       }`}
+       aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
+          {isFavorite ? '❤️' : '🤍'}
+        </button>
+      </div>
       {element.cover_url && (
         <img
           src={element.cover_url}

@@ -2,11 +2,13 @@ import "./App.css";
 import { BtnScrollToTop } from "./component/BtnScrollToTop";
 import { ListCards } from "./component/ListCards";
 import { useEventData } from "./hooks/useEventData";
+import { useFavorites } from "./hooks/useFavorite";
 import { useState, useEffect } from "react";
 
 function App() {
   const { data, error, isFetching, searchTerm, setSearchTerm, handleSearch } =
     useEventData();
+    const { toggleFavorite, isFavorite, showFavoritesOnly, toggleShowFavoritesOnly, filterData, favorites } = useFavorites();
 
   const [darkMode, setDarkMode] = useState(false);
 
@@ -17,6 +19,8 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  const displayedData = showFavoritesOnly ? filterData(data) : data;
 
   if (error) {
     return <div>Erreur: {error}</div>;
@@ -32,13 +36,54 @@ function App() {
           {darkMode ? "☀️" : "🌙"}
         </button>
         <h1>Événements à Paris</h1>
+        <div className="flex gap-4 mb-6 justify-center flex-wrap">
+          <button
+            onClick={toggleShowFavoritesOnly}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all ${showFavoritesOnly ? "bg-red-500 text-white hover:bg-red-600 shadow-lg" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
+            >
+              {showFavoritesOnly ? '❤️ Favoris uniquement' : '📋 Tous les événements'}
+            </button>
+            <div className="px-4 py-3 bg-blue-100 rounded-lg border">
+              <span className="font-semibold text-blue-800">
+                {favorites.length} favori{favorites.length !== 1 ? 's' : ''}
+              </span>
+              </div>
+            </div>
+            {showFavoritesOnly && displayedData.length === 0 ? (
+              <div className="text-center py-12 bg-gray-50 rounded-lg">
+                <div className="text-6xl mb-4">💔</div>
+                <p className="text-xl text-gray-600 mb-4">Aucun favori pour le moment</p>
+                <p className="text-gray-500 mb-6">
+                  cliquez sur 🤍 pour ajouter des événements aux favoris !
+                </p>
+                <button
+                  onClick={toggleShowFavoritesOnly}
+                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  >
+                  Voir tous les événements
+                  </button>
+              </div>
+            ) : (
+              <>
+              {showFavoritesOnly && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 text-center">
+                  <span className="text-red-700 font-medium">
+                  ❤️ affichage : {displayedData.length} favori{displayedData.length !== 1 ? 's' : ''} sur {data.length} événement{data.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
+
         <ListCards
-          data={data}
+          data={displayedData}
           onSearch={handleSearch}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           isFetching={isFetching}
+          toggleFavorite={toggleFavorite}
+          isFavorite={isFavorite}
         />
+              </>
+            )}
         <BtnScrollToTop />
       </div>
     </>
