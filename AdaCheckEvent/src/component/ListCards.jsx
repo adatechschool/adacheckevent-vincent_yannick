@@ -19,19 +19,19 @@ export function ListCards({
   return (
     <div>
       {/* Barre de recherche */}
-      <div className="search-container mb-6 p-4 bg-gray-100 rounded-lg">
+      <div className="search-container mb-6 p-4 rounded-lg dark:text-white">
         <form onSubmit={handleSearch} className="flex gap-2 mb-2">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Rechercher un événement (ex: concert, théâtre, exposition...)"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 border border-teal-600 dark:border-gray-600 dark:bg-gray-900 dark:placeholder-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 dark:focus:ring-green-600"
           />
           <button
             type="submit"
             disabled={isFetching}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition-colors"
+            className="px-6 py-2 bg-gradient-to-t from-green-600/75 to-green-400 shadow-[0_0_15px_rgba(0,255,100,0.3)]  text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400 transition-colors"
           >
             <Search />
           </button>
