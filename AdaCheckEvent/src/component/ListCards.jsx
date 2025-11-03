@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card } from "./Card";
-import { Search } from "lucide-react";
+import { MoveUp, MoveDown, Search } from "lucide-react";
 
 export function ListCards({
   data,
@@ -10,6 +10,8 @@ export function ListCards({
   isFetching,
   toggleFavorite,
   isFavorite,
+  orderToggle,
+  setOrderToggle
 }) {
   const handleSearch = (e) => {
     e.preventDefault();
@@ -31,6 +33,14 @@ export function ListCards({
             placeholder="Rechercher un événement (ex: concert, théâtre, exposition...)"
             className="w-full sm:flex-1 px-4 py-2 border border-teal-600 dark:border-gray-600 dark:bg-gray-900 dark:placeholder-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 dark:focus:ring-green-600"
           />
+          <button
+            type="button"
+            onClick={() => setOrderToggle((prev) => !prev)}
+            className="px-3 py-2 rounded cursor-pointer bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800"
+            aria-label="Toggle order"
+          >
+            {orderToggle ? <MoveUp /> : <MoveDown />}
+          </button>
           <button
             type="submit"
             disabled={isFetching}
