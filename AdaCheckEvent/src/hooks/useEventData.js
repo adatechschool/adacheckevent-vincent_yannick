@@ -9,19 +9,20 @@ export const useEventData = (
   const [offset, setOffset] = useState(0);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [isFetching, setIsFetching] = useState(false);
+  const [orderToggle, setOrderToggle] = useState("asc")
 
   const limit = 20;
 
   // Fonction de fetch sans dépendance sur isFetching
   const fetchData = useCallback(
-    async (newOffset, newSearchTerm = searchTerm) => {
+    async (newOffset, newSearchTerm = searchTerm, orderToggle) => {
       setIsFetching(true);
       setError(null);
 
       try {
         let url = `https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=${limit}&offset=${newOffset}`;
         if (newSearchTerm) {
-          url += `&where=search(title, "${encodeURIComponent(newSearchTerm)}")`;
+          url += `&where=(search(title, "${encodeURIComponent(newSearchTerm)}") OR search(qfap_tags, "${encodeURIComponent(newSearchTerm)}"))&order_by=date_start ${orderToggle}`
         }
 
         const response = await fetch(url);
