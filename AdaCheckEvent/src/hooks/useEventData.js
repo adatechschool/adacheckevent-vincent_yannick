@@ -8,22 +8,28 @@ export const useEventData = (
   const [error, setError] = useState(null);
   const [offset, setOffset] = useState(0);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+  const [orderToggle, setOrderToggle] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   const limit = 20;
 
   // Fonction de fetch sans dépendance sur isFetching
   const fetchData = useCallback(
-    async (newOffset, newSearchTerm = searchTerm) => {
+    async (newOffset, newSearchTerm = searchTerm, order = orderToggle) => {
       setIsFetching(true);
       setError(null);
-
+      // ne pas modifier orderToggle ici
       try {
         let url = `https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=${limit}&offset=${newOffset}`;
         if (newSearchTerm) {
-          url += `&where=search(title, "${encodeURIComponent(newSearchTerm)}")`;
+          url += `&where=(search(title, "${encodeURIComponent(
+            newSearchTerm
+          )}") OR search(qfap_tags, "${encodeURIComponent(newSearchTerm)}"))`;
         }
-
+        const sortOrder = order ? "DESC" : "ASC";
+        url += `&order_by=date_start ${sortOrder}`;
+        console.log(url);
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -31,17 +37,21 @@ export const useEventData = (
         }
 
         const dataFetch = await response.json();
-        console.log("URL:", response.url);
+        // console.log("URL:", response.url);
+        const results = dataFetch.results || [];
+
+        // Si on a moins de résultats que la taille de page, il n'y a plus de pages
+        setHasMore(results.length === limit);
 
         setData((prev) => {
           // Si c'est un nouveau search (offset = 0), remplacer les données
           if (newOffset === 0) {
-            return dataFetch.results || [];
+            return results;
           }
 
           // Sinon, ajouter en évitant les doublons
           const newIds = new Set(prev.map((item) => item.id));
-          const filteredResults = (dataFetch.results || []).filter(
+          const filteredResults = results.filter(
             (item) => !newIds.has(item.id)
           );
           return [...prev, ...filteredResults];
@@ -50,7 +60,7 @@ export const useEventData = (
         console.log(
           "Données récupérées avec offset:",
           newOffset,
-          dataFetch.results?.length || 0
+          results.length
         );
       } catch (err) {
         console.error("Erreur fetch:", err);
@@ -59,7 +69,7 @@ export const useEventData = (
         setIsFetching(false);
       }
     },
-    [searchTerm, limit]
+    [limit, orderToggle]
   );
 
   // Fonction de recherche
@@ -68,6 +78,7 @@ export const useEventData = (
       setSearchTerm(newSearchTerm);
       setOffset(0);
       setData([]);
+      setHasMore(true);
       fetchData(0, newSearchTerm);
     },
     [fetchData]
@@ -75,21 +86,24 @@ export const useEventData = (
 
   // Fonction pour charger plus
   const loadMore = useCallback(() => {
-    if (!isFetching) {
+    if (!isFetching && hasMore) {
       const newOffset = offset + limit;
       setOffset(newOffset);
       fetchData(newOffset, searchTerm);
     }
-  }, [isFetching, offset, limit, fetchData]);
+  }, [isFetching, offset, limit, fetchData, hasMore]);
 
   // Fonction de gestion du scroll infini
   const handleScroll = useCallback(() => {
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = document.documentElement.clientHeight;
-
     // Si on est proche du bas (100px avant la fin) et qu'on ne fetch pas déjà
-    if (scrollTop + clientHeight >= scrollHeight - 100 && !isFetching) {
+    if (
+      scrollTop + clientHeight >= scrollHeight - 100 &&
+      !isFetching &&
+      hasMore
+    ) {
       loadMore();
     }
   }, [isFetching, loadMore]);
@@ -106,6 +120,15 @@ export const useEventData = (
   useEffect(() => {
     fetchData(0, initialSearchTerm);
   }, []);
+
+  // Quand l'ordre change, recharger les données (offset 0)
+  useEffect(() => {
+    // reset pagination et données, puis fetch avec le nouvel ordre
+    setOffset(0);
+    setData([]);
+    setHasMore(true);
+    fetchData(0, searchTerm, orderToggle);
+  }, [orderToggle, fetchData]);
 
   // Gestion du scroll infini
   useEffect(() => {
@@ -124,5 +147,8 @@ export const useEventData = (
     handleSearch,
     loadMore,
     resetData,
+    orderToggle,
+    setOrderToggle,
+    hasMore,
   };
 };

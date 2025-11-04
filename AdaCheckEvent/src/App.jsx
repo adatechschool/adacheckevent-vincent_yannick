@@ -14,10 +14,18 @@ function App() {
     filterData,
     favorites,
   } = useFavorites();
-  const { data, error, isFetching, searchTerm, setSearchTerm, handleSearch } =
-    useEventData("", !showFavoritesOnly);
+  const {
+    data,
+    error,
+    isFetching,
+    searchTerm,
+    setSearchTerm,
+    handleSearch,
+    orderToggle,
+    setOrderToggle,
+  } = useEventData("", !showFavoritesOnly);
 
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     if (darkMode) {
@@ -101,6 +109,8 @@ function App() {
               isFetching={isFetching}
               toggleFavorite={toggleFavorite}
               isFavorite={isFavorite}
+              orderToggle={orderToggle}
+              setOrderToggle={setOrderToggle}
             />
           </>
         )}

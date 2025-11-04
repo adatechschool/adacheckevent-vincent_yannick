@@ -1,42 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useFavorites = () => {
-    const [favorites, setFavorites] = useState(() => {
-        const saved = localStorage.getItem('favorites')
-        return saved ? JSON.parse(saved) : []
-    })
-    
-    const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-    useEffect(() => {
-        localStorage.setItem('favorites', JSON.stringify(favorites))
-    }, [favorites])
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
-    const toggleFavorite = (eventId) => {
-        setFavorites(prev =>
-            prev.includes(eventId)
-            ? prev.filter(id => id !== eventId)
-            : [...prev, eventId]
-        )
-    }
-    const isFavorite = (eventId) => favorites.includes(eventId)
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
-    const filterData = (data) => {
-        return showFavoritesOnly
-            ? data.filter(item => favorites.includes(item.id))
-            : data
-    }
+  const toggleFavorite = (eventId) => {
+    setFavorites((prev) =>
+      prev.includes(eventId)
+        ? prev.filter((id) => id !== eventId)
+        : [...prev, eventId]
+    );
+  };
+  const isFavorite = (eventId) => favorites.includes(eventId);
 
-    const toggleShowFavoritesOnly = () => {
-        setShowFavoritesOnly(prev => !prev);
-    }
+  const filterData = (data) => {
+    return showFavoritesOnly
+      ? data.filter((item) => favorites.includes(item.id))
+      : data;
+  };
 
-    return {
-        favorites,
-        toggleFavorite,
-        showFavoritesOnly,
-        toggleShowFavoritesOnly,
-        isFavorite,
-        filterData
-    }
-}
+  const toggleShowFavoritesOnly = () => {
+    setShowFavoritesOnly((prev) => !prev);
+  };
+
+  return {
+    favorites,
+    toggleFavorite,
+    showFavoritesOnly,
+    toggleShowFavoritesOnly,
+    isFavorite,
+    filterData,
+  };
+};
