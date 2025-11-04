@@ -44,9 +44,9 @@ export const Card = ({ element, isFavorite, onToggleFavorite }) => {
       <p className="text-white mb-3">
         {isExpanded ? description : descriptionTruncated}
       </p>
-      <div>
-        <Map coordinates={element.lat_lon} />
-      </div>
+      <>
+        {isExpanded && <Map coordinates={element.lat_lon} element={element}/>}
+      </>
       {description.length > 160 && (
         <button
           className="font-mono cursor-pointer px-4 py-2 rounded bg-gradient-to-t from-green-600/75 to-green-400 shadow-[0_0_15px_rgba(0,255,100,0.3)] hover:bg-green-900 text-white transition-colors"

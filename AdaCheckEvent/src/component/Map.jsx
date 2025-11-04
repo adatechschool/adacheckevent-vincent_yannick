@@ -1,9 +1,9 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-export const Map = ({coordinates}) => {
+export const Map = ({coordinates, element}) => {
   return (
-    <div className="translate-x-[50%] p-2" style={{height: '50%', width: '50%'}}>
+    <div className="text-center m-auto p-2" style={{height: 'auto', width: '50%'}}>
 
 
     <MapContainer center={coordinates} zoom={20} style={{ height: '50vh', width: '100%' }}>
@@ -12,7 +12,7 @@ export const Map = ({coordinates}) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
       <Marker position={coordinates}>
-        <Popup>Paris !</Popup>
+        <Popup>{element.address_street}</Popup>
       </Marker>
     </MapContainer> 
         </div>
