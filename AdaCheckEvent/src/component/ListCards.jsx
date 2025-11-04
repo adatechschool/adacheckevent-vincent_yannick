@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card } from "./Card";
-import { MoveUp, MoveDown, Search } from "lucide-react";
+import { ArrowUpNarrowWide, ArrowDownNarrowWide, Search } from "lucide-react";
 
 export function ListCards({
   data,
@@ -36,10 +36,10 @@ export function ListCards({
           <button
             type="button"
             onClick={() => setOrderToggle((prev) => !prev)}
-            className="px-3 py-2 rounded cursor-pointer bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="px-3 py-2 cursor-pointer bg-gradient-to-t from-green-600/75 to-green-400 shadow-[0_0_15px_rgba(0,255,100,0.3)]  text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400 transition-colors"
             aria-label="Toggle order"
           >
-            {orderToggle ? <MoveUp /> : <MoveDown />}
+            {orderToggle ? <ArrowUpNarrowWide /> : <ArrowDownNarrowWide />}
           </button>
           <button
             type="submit"
