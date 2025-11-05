@@ -1,4 +1,5 @@
 import "./App.css";
+import { DarkMode } from "./component/DarkMode";
 import { BtnScrollToTop } from "./component/BtnScrollToTop";
 import { ListCards } from "./component/ListCards";
 import { useEventData } from "./hooks/useEventData";
@@ -25,16 +26,6 @@ function App() {
     setOrderToggle,
   } = useEventData("", !showFavoritesOnly);
 
-  const [darkMode, setDarkMode] = useState(true);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
-
   const displayedData = showFavoritesOnly ? filterData(data) : data;
 
   if (error) {
@@ -44,13 +35,7 @@ function App() {
   return data ? (
     <>
       <div className="App">
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="fixed top-4 right-4 px-4 py-2 "
-        >
-          {darkMode ? "☀️" : "🌙"}
-        </button>
-
+      <DarkMode />
         <h1 className="text-2xl md:text-4xl text-white p-4 font-mono">
           Événements à Paris
         </h1>
