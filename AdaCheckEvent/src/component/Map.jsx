@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 
 export const Map = ({coordinates, element}) => {
   return (
-    <div className="text-center m-auto p-2" style={{height: 'auto', width: '50%'}}>
+    <div className="text-center m-auto p-2" style={{height: 'auto', width: '100%'}}>
 
 
     <MapContainer center={coordinates} zoom={20} style={{ height: '50vh', width: '100%' }}>

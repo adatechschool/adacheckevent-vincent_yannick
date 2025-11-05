@@ -35,7 +35,7 @@ function App() {
   return data ? (
     <>
       <div className="App">
-      <DarkMode />
+        <DarkMode />
         <h1 className="text-2xl md:text-4xl text-white p-4 font-mono">
           Événements à Paris
         </h1>
@@ -104,12 +104,7 @@ function App() {
     </>
   ) : (
     <>
-      <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="fixed top-4 right-4 px-4 py-2 border-red-500 border rounded-lg"
-      >
-        {darkMode ? "☀️" : "🌙"}
-      </button>
+      <DarkMode />
       <div>Chargement des données...</div>
     </>
   );
