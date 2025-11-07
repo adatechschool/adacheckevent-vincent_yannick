@@ -45,7 +45,7 @@ export const Card = ({ element, isFavorite, onToggleFavorite }) => {
         {isExpanded ? description : descriptionTruncated}
       </p>
       <>
-        {isExpanded && <Map coordinates={element.lat_lon} element={element}/>}
+        {isExpanded && <Map coordinates={element.lat_lon} element={element} />}
       </>
       {description.length > 160 && (
         <button
