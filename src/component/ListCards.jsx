@@ -11,7 +11,7 @@ export function ListCards({
   toggleFavorite,
   isFavorite,
   orderToggle,
-  setOrderToggle
+  setOrderToggle,
 }) {
   const handleSearch = (e) => {
     e.preventDefault();
@@ -20,7 +20,6 @@ export function ListCards({
 
   return (
     <div>
-      {/* Barre de recherche */}
       <div className="search-container mb-6 p-4 rounded-lg dark:text-white">
         <form
           onSubmit={handleSearch}
@@ -51,7 +50,6 @@ export function ListCards({
         </form>
       </div>
 
-      {/* Liste des cartes */}
       <div className="grid grid-cols-1 gap-4 px-4">
         {data.map((elem) => (
           <Card
@@ -63,7 +61,6 @@ export function ListCards({
         ))}
       </div>
 
-      {/* Indicateur de chargement */}
       {isFetching && (
         <div className="text-center mt-4 p-4">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
